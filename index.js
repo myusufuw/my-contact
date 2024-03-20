@@ -4,6 +4,12 @@ const contactListContainer = document.getElementById("contactListContainer")
 const contactFormContainer = document.getElementById("contactFormContainer")
 const cancelButton = document.getElementById("cancelButton")
 const contactForm = document.getElementById("contactForm")
+// SEARCH BAR
+const searchInput = document.getElementById("searchInput")
+
+searchInput.addEventListener("input", () => {
+  renderContactList(searchInput.value.toLowerCase())
+})
 
 const handleCreateNewContact = () => {
   contactFormContainer.style.display = "block"
@@ -45,13 +51,13 @@ const handleSaveContact = () => {
   renderContactList()
 }
 
-const renderContactList = () => {
+const renderContactList = (searchKeyword = "") => {
   let rawContactList = JSON.parse(localStorage.getItem("my-contact")) || []
 
   const contactList = rawContactList.map((item, index) => {
     return {
       ...item,
-      isShown: true,
+      isShown: item.fullName.toLowerCase().includes(searchKeyword),
     }
   })
 
@@ -81,7 +87,7 @@ const renderContactList = () => {
           </div>
           <div
             id="card${index}"
-            class="h-0 bg-slate-800 rounded mb-3 transition-[height] duration-500 overflow-hidden"
+            class="h-0 bg-slate-800 rounded mb-0 transition-all duration-500 overflow-hidden"
           >
             <div class=' m-4'>Hello</div>
           </div>`
@@ -100,8 +106,10 @@ const renderDetailCard = (id) => {
   var style = window.getComputedStyle(contactDetail)
   if (style.height === "0px") {
     contactDetail.style.height = "100px"
+    contactDetail.style.marginBottom = "12px"
   } else {
     contactDetail.style.height = "0px"
+    contactDetail.style.marginBottom = "0px"
   }
 }
 
