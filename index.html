@@ -8,7 +8,7 @@
     <title>My Contact</title>
   </head>
 
-  <body class="bg-slate-950 text-white">
+  <body class="text-white bg-slate-950">
     <main class="flex flex-col items-center">
       <section class="max-w-screen-md h-screen w-full p-6 relative">
         <!-- HEADER -->
@@ -22,6 +22,21 @@
             New Contact
           </button>
         </div>
+
+        <!-- SEARCH BAR -->
+        <div class="mt-6 pb-4 border-b border-slate-400 flex flex-row w-full">
+          <input
+            class="w-full bg-transparent border rounded-lg border-slate-400 mr-4 p-2 focus:border-blue-500 outline-none"
+          />
+          <div
+            class="p-2 border rounded-lg border-slate-400 px-3 flex justify-center items-center"
+          >
+            Search
+          </div>
+        </div>
+
+        <!-- CONTACT LIST -->
+        <div id="contactListContainer" class="mt-4 h-[80%] text-white"></div>
 
         <!-- NEW CONTACT FORM -->
         <div
