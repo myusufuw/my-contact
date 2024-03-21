@@ -17,7 +17,7 @@
           <button
             onclick="handleCreateNewContact()"
             type="button"
-            class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-2 focus:outline-none focus:ring-blue-800 rounded-lg text-xs px-2 py-2 text-center"
+            class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:outline-none rounded text-xs sm:text-base px-3 py-2 text-center"
           >
             New Contact
           </button>
@@ -39,7 +39,7 @@
         <!-- CONTACT LIST -->
         <div
           id="contactListContainer"
-          class="mt-4 h-[82%] text-white px-2 overflow-auto"
+          class="mt-4 h-[82%] text-white overflow-auto"
         ></div>
 
         <!-- NEW CONTACT FORM -->
@@ -149,16 +149,25 @@
               id="cancelButton"
               onclick="handleCancelButtonClick()"
               type="button"
-              class="text-white border mr-4 border-blue-500 hover:bg-slate-600 hover:border-slate-600 focus:ring-2 focus:outline-none focus:ring-blue-800 rounded-md text-sm font-medium px-5 py-2.5 text-center"
+              class="bg-red-500 py-2 px-4 rounded hover:bg-red-600 text-center mr-4"
             >
               Cancel
             </button>
             <button
+              id="saveButton"
               type="button"
               onClick="handleSaveContact()"
-              class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-800 rounded-md text-sm font-medium px-5 py-2.5 text-center"
+              class="bg-blue-500 py-2 px-4 rounded hover:bg-blue-600 mr-3 text-center"
             >
               Save
+            </button>
+            <button
+              id="editButton"
+              type="button"
+              onClick="handleUpdateContact()"
+              class="bg-blue-500 py-2 px-4 rounded hover:bg-blue-600 mr-3 text-center hidden"
+            >
+              Edit
             </button>
           </div>
         </div>

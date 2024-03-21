@@ -1,11 +1,15 @@
 // CONTACT LIST CONTAINER
 const contactListContainer = document.getElementById("contactListContainer")
-// CONTACT ACTION BUTTONS
+// CONTACT FORMS
 const contactFormContainer = document.getElementById("contactFormContainer")
-const cancelButton = document.getElementById("cancelButton")
 const contactForm = document.getElementById("contactForm")
+// CONTACT ACTION BUTTONS
+const cancelButton = document.getElementById("cancelButton")
+const editButton = document.getElementById("editButton")
+const saveButton = document.getElementById("saveButton")
 // SEARCH BAR
 const searchInput = document.getElementById("searchInput")
+let tempContactId = null
 
 searchInput.addEventListener("input", () => {
   renderContactList(searchInput.value.toLowerCase())
@@ -26,13 +30,12 @@ const saveContactsToLocalStorage = (contactList) => {
 }
 
 const handleSaveContact = () => {
-  const fullName = document.getElementById("fullName").value
-  const email = document.getElementById("email").value
-  const phoneNumber = document.getElementById("phoneNumber").value
-  const address = document.getElementById("address").value
-  const birthday = document.getElementById("birthday").value
-  const additionalNotes = document.getElementById("additionalNotes").value
-
+  let fullName = document.getElementById("fullName").value
+  let email = document.getElementById("email").value
+  let phoneNumber = document.getElementById("phoneNumber").value
+  let address = document.getElementById("address").value
+  let birthday = document.getElementById("birthday").value
+  let additionalNotes = document.getElementById("additionalNotes").value
   let contactList = JSON.parse(localStorage.getItem("my-contact")) || []
 
   contactList.push({
@@ -51,6 +54,68 @@ const handleSaveContact = () => {
   renderContactList()
 }
 
+const handleUpdateContact = () => {
+  let fullName = document.getElementById("fullName").value
+  let email = document.getElementById("email").value
+  let phoneNumber = document.getElementById("phoneNumber").value
+  let address = document.getElementById("address").value
+  let birthday = document.getElementById("birthday").value
+  let additionalNotes = document.getElementById("additionalNotes").value
+  let contactList = JSON.parse(localStorage.getItem("my-contact")) || []
+
+  const updatedContactList = contactList.map((item) => {
+    if (item.id === +tempContactId) {
+      item.fullName = fullName
+      item.email = email
+      item.phoneNumber = phoneNumber
+      item.address = address
+      item.birthday = birthday
+      item.additionalNotes = additionalNotes
+    }
+    return item
+  })
+
+  saveContactsToLocalStorage(updatedContactList)
+  renderContactList()
+  contactForm.reset()
+  contactFormContainer.style.display = "none"
+  editButton.style.display = "none"
+  saveButton.style.display = "block"
+  tempContactId = null
+}
+
+const handleEditContact = (contactId) => {
+  contactFormContainer.style.display = "block"
+  contactFormContainer.style.opacity = 1
+
+  let contactList = JSON.parse(localStorage.getItem("my-contact")) || []
+
+  const contactDetails = contactList.find((item) => item.id === +contactId)
+
+  document.getElementById("fullName").value = contactDetails.fullName
+  document.getElementById("email").value = contactDetails.email
+  document.getElementById("phoneNumber").value = contactDetails.phoneNumber
+  document.getElementById("address").value = contactDetails.address
+  document.getElementById("birthday").value = contactDetails.birthday
+  document.getElementById("additionalNotes").value =
+    contactDetails.additionalNotes
+  tempContactId = contactId
+
+  editButton.style.display = "block"
+  saveButton.style.display = "none"
+}
+
+const handleDeleteContact = (contactId) => {
+  let contactList = JSON.parse(localStorage.getItem("my-contact")) || []
+
+  const newContactList = [...contactList].filter(
+    (item) => item.id !== +contactId
+  )
+
+  saveContactsToLocalStorage(newContactList)
+  renderContactList()
+}
+
 const renderContactList = (searchKeyword = "") => {
   let rawContactList = JSON.parse(localStorage.getItem("my-contact")) || []
 
@@ -63,6 +128,10 @@ const renderContactList = (searchKeyword = "") => {
 
   contactListContainer.innerHTML = ""
 
+  if (rawContactList.length === 0) {
+    contactListContainer.innerHTML = `<p class="text-lg">asdsad</p>`
+  }
+
   contactList.forEach((item, index) => {
     const cardTemplate = `
     ${
@@ -73,7 +142,10 @@ const renderContactList = (searchKeyword = "") => {
           >
             <p class="text-lg">${item.fullName}</p>
             <div>
-              <button class="bg-blue-500 py-1 px-3 rounded hover:bg-blue-600 mr-2"> 
+              <button 
+                class="bg-blue-500 py-1 px-3 rounded hover:bg-blue-600 mr-2"
+                onClick="event.stopPropagation(); handleEditContact('${item.id}')"
+              > 
                 Edit 
               </button>
 
@@ -98,8 +170,6 @@ const renderContactList = (searchKeyword = "") => {
   })
 }
 
-renderContactList()
-
 const renderDetailCard = (id) => {
   const contactDetail = document.getElementById(id)
 
@@ -113,14 +183,4 @@ const renderDetailCard = (id) => {
   }
 }
 
-const handleDeleteContact = (contactId) => {
-  console.log(contactId)
-  let contactList = JSON.parse(localStorage.getItem("my-contact")) || []
-  console.log(contactList)
-  const newContactList = [...contactList].filter(
-    (item) => item.id !== Number(contactId)
-  )
-  saveContactsToLocalStorage(newContactList)
-  console.log(newContactList)
-  renderContactList()
-}
+renderContactList()
