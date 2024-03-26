@@ -129,7 +129,7 @@ const renderContactList = (searchKeyword = "") => {
   contactListContainer.innerHTML = ""
 
   if (rawContactList.length === 0) {
-    contactListContainer.innerHTML = `<p class="text-lg">asdsad</p>`
+    contactListContainer.innerHTML = ""
   }
 
   contactList.forEach((item, index) => {
@@ -161,7 +161,12 @@ const renderContactList = (searchKeyword = "") => {
             id="card${index}"
             class="h-0 bg-slate-800 rounded mb-0 transition-all duration-500 overflow-hidden"
           >
-            <div class=' m-4'>Hello</div>
+            <div class="m-4">
+              <div class="w-full flex items-center justify-center flex-col p-1">
+              <img src="./assets/user.png" width="100px" height="100px"/>
+              <p class=" mt-2">${item.fullName}</p>
+              </div>
+            </div>
           </div>`
         : ""
     }
@@ -175,7 +180,7 @@ const renderDetailCard = (id) => {
 
   var style = window.getComputedStyle(contactDetail)
   if (style.height === "0px") {
-    contactDetail.style.height = "100px"
+    contactDetail.style.height = "500px"
     contactDetail.style.marginBottom = "12px"
   } else {
     contactDetail.style.height = "0px"
