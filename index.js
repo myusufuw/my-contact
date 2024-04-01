@@ -10,9 +10,14 @@ const saveButton = document.getElementById("saveButton")
 // SEARCH BAR
 const searchInput = document.getElementById("searchInput")
 let tempContactId = null
+let urlParams = new URLSearchParams(window.location.search)
+let initialValue = urlParams.get("q")
 
 searchInput.addEventListener("input", () => {
   renderContactList(searchInput.value.toLowerCase())
+  let newUrl =
+    window.location.origin + "?q=" + encodeURIComponent(searchInput.value)
+  window.history.replaceState({}, "", newUrl)
 })
 
 const handleCreateNewContact = () => {
@@ -159,7 +164,7 @@ const renderContactList = (searchKeyword = "") => {
           </div>
           <div
             id="card${index}"
-            class="h-0 bg-slate-800 rounded mb-0 transition-all duration-500 overflow-hidden"
+            class="h-0 bg-slate-800 rounded mb-0 transition-all duration-500 overflow-auto"
           >
             <div class="m-4">
               <div class="w-full flex items-center justify-center flex-col p-1">
@@ -167,6 +172,44 @@ const renderContactList = (searchKeyword = "") => {
               <p class=" mt-2">${item.fullName}</p>
               </div>
             </div>
+            <div class="flex p-3 justify-center items-center border border-x-0 border-slate-500">
+              <div class="flex flex-row gap-5">
+                <a href="mailto:${item.email}" target="_blank">
+                  <img src="./assets/email.png" width="50px" height="50px"/>
+                </a>
+                <a href="https:wa.me//+${item.phoneNumber}" target="_blank">
+                  <img src="./assets/whatsapp.png" width="50px" height="50px"/>
+                </a>
+                <a href="https:tele.me//+${item.phoneNumber}" target="_blank">
+                  <img src="./assets/telegram.png" width="50px" height="50px"/>
+                </a>
+              </div>
+            </div>
+            <div class="py-3 px-[5%] sm:px-[5%] flex flex-col sm:items-center">
+              <div>
+                <div class="flex flex-col sm:flex-row border-b pb-2 mb-2 border-slate-500">
+                  <p class="sm:text-lg min-w-[170px]">📧 Email:&nbsp;</p>
+                  <p class="sm:text-lg">${item.email}</p>
+                </div>
+                <div class="flex flex-col sm:flex-row border-b pb-2 mb-2 border-slate-500">
+                  <p class="sm:text-lg min-w-[170px]">📧 Phone Number:&nbsp;</p>
+                  <p class="sm:text-lg">${item.phoneNumber}</p>
+                </div>
+                <div class="flex flex-col sm:flex-row border-b pb-2 mb-2 border-slate-500">
+                  <p class="sm:text-lg min-w-[170px]">📧 Address:&nbsp;</p>
+                  <p class="sm:text-lg">${item.address}</p>
+                </div>
+                <div class="flex flex-col sm:flex-row border-b pb-2 mb-2 border-slate-500">
+                  <p class="sm:text-lg min-w-[170px]">📧 Birthday:&nbsp;</p>
+                  <p class="sm:text-lg">${item.birthday}</p>
+                </div>
+                <div class="flex flex-col sm:flex-row border-b pb-2 mb-2 border-slate-500">
+                  <p class="sm:text-lg min-w-[170px]">📧 Notes:&nbsp;</p>
+                  <p class="sm:text-lg">${item.additionalNotes}</p>
+                </div>
+              </div>
+            </div>
+            
           </div>`
         : ""
     }
@@ -178,9 +221,9 @@ const renderContactList = (searchKeyword = "") => {
 const renderDetailCard = (id) => {
   const contactDetail = document.getElementById(id)
 
-  var style = window.getComputedStyle(contactDetail)
+  let style = window.getComputedStyle(contactDetail)
   if (style.height === "0px") {
-    contactDetail.style.height = "500px"
+    contactDetail.style.height = "86%"
     contactDetail.style.marginBottom = "12px"
   } else {
     contactDetail.style.height = "0px"
@@ -188,4 +231,8 @@ const renderDetailCard = (id) => {
   }
 }
 
-renderContactList()
+renderContactList(initialValue ?? "")
+
+if (initialValue !== null) {
+  searchInput.value = initialValue
+}
