@@ -182,7 +182,7 @@ const renderContactList = (searchKeyword = "") => {
 
   if (rawContactList.length === 0) {
     contactListContainer.innerHTML = `<div class='flex justify-center items-center w-full h-full'>
-        <img src='./assets/contact.gif' width='80%' height='80%' />
+        <img src='./assets/contact.gif' width='80%' height='80%' style="opacity: 30%;" />
       </div>`
   }
 
