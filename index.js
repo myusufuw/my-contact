@@ -217,7 +217,7 @@ const renderContactList = (searchKeyword = "") => {
           </div>
           <div
             id="card${index}"
-            class="h-0 bg-slate-800 rounded mb-0 transition-all duration-500 overflow-auto"
+            class="h-0 bg-slate-800 rounded mb-0 transition-all duration-500 overflow-hidden"
           >
             <div class="m-4">
               <div class="w-full flex items-center justify-center flex-col p-1">
@@ -245,19 +245,19 @@ const renderContactList = (searchKeyword = "") => {
                   <p class="sm:text-lg">${item.email}</p>
                 </div>
                 <div class="flex flex-col sm:flex-row border-b pb-2 mb-2 border-slate-500">
-                  <p class="sm:text-lg min-w-[170px]">📧 Phone Number:&nbsp;</p>
+                  <p class="sm:text-lg min-w-[170px]">☎ Phone Number:&nbsp;</p>
                   <p class="sm:text-lg">${item.phoneNumber}</p>
                 </div>
                 <div class="flex flex-col sm:flex-row border-b pb-2 mb-2 border-slate-500">
-                  <p class="sm:text-lg min-w-[170px]">📧 Address:&nbsp;</p>
+                  <p class="sm:text-lg min-w-[170px]">📍 Address:&nbsp;</p>
                   <p class="sm:text-lg">${item.address}</p>
                 </div>
                 <div class="flex flex-col sm:flex-row border-b pb-2 mb-2 border-slate-500">
-                  <p class="sm:text-lg min-w-[170px]">📧 Birthday:&nbsp;</p>
+                  <p class="sm:text-lg min-w-[170px]">📅 Birthday:&nbsp;</p>
                   <p class="sm:text-lg">${item.birthday}</p>
                 </div>
                 <div class="flex flex-col sm:flex-row border-b pb-2 mb-2 border-slate-500">
-                  <p class="sm:text-lg min-w-[170px]">📧 Notes:&nbsp;</p>
+                  <p class="sm:text-lg min-w-[170px]">📝 Notes:&nbsp;</p>
                   <p class="sm:text-lg">${
                     item.additionalNotes !== "" ? item.additionalNotes : "-"
                   }</p>
@@ -279,7 +279,7 @@ const renderDetailCard = (id) => {
 
   let style = window.getComputedStyle(contactDetail)
   if (style.height === "0px") {
-    contactDetail.style.height = "500px"
+    contactDetail.style.height = window.innerWidth > 412 ? "500px" : "600px"
     contactDetail.style.marginBottom = "12px"
   } else {
     contactDetail.style.height = "0px"
