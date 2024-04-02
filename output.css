@@ -864,6 +864,10 @@ video {
   height: 82%;
 }
 
+.h-full {
+  height: 100%;
+}
+
 .h-screen {
   height: 100vh;
 }
@@ -890,26 +894,6 @@ video {
 
 .w-full {
   width: 100%;
-}
-
-.min-w-\[160\] {
-  min-width: 160;
-}
-
-.min-w-\[160px\] {
-  min-width: 160px;
-}
-
-.min-w-\[180\] {
-  min-width: 180;
-}
-
-.min-w-\[180px\] {
-  min-width: 180px;
-}
-
-.min-w-\[175px\] {
-  min-width: 175px;
 }
 
 .min-w-\[170px\] {
@@ -2138,12 +2122,12 @@ video {
   padding-bottom: 0.75rem;
 }
 
-.pb-4 {
-  padding-bottom: 1rem;
-}
-
 .pb-2 {
   padding-bottom: 0.5rem;
+}
+
+.pb-4 {
+  padding-bottom: 1rem;
 }
 
 .text-left {
@@ -2698,6 +2682,60 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+/* Styles for the snackbar */
+
+#snackbar {
+  visibility: hidden;
+  /* Default to hidden */
+  min-width: 250px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  top: 30px;
+  transform: translateX(-50%);
+}
+
+/* Show the snackbar */
+
+#snackbar.show {
+  visibility: visible;
+  animation: fadein 0.5s, fadeout 0.5s 2.8s;
+  /* Fade in and fade out animation */
+}
+
+/* Fade in animation */
+
+@keyframes fadein {
+  from {
+    top: 0;
+    opacity: 0;
+  }
+
+  to {
+    top: 30px;
+    opacity: 1;
+  }
+}
+
+/* Fade out animation */
+
+@keyframes fadeout {
+  from {
+    top: 30px;
+    opacity: 1;
+  }
+
+  to {
+    top: 0;
+    opacity: 0;
+  }
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;
@@ -2791,22 +2829,6 @@ input::-webkit-inner-spin-button {
 }
 
 @media (min-width: 640px) {
-  .sm\:h-\[60\%\] {
-    height: 60%;
-  }
-
-  .sm\:h-\[670\%\] {
-    height: 670%;
-  }
-
-  .sm\:h-\[70\%\] {
-    height: 70%;
-  }
-
-  .sm\:h-\[65\%\] {
-    height: 65%;
-  }
-
   .sm\:max-w-screen-sm {
     max-width: 640px;
   }

@@ -13,27 +13,47 @@ let tempContactId = null
 let urlParams = new URLSearchParams(window.location.search)
 let initialValue = urlParams.get("q")
 
+// FUNCTION SHOW THE SNACKBAR
+const showSnackbar = (message, backgroundColor) => {
+  let snackbar = document.getElementById("snackbar")
+  snackbar.className = "show"
+  snackbar.style.backgroundColor = backgroundColor
+  snackbar.innerText = message
+
+  setTimeout(function () {
+    snackbar.className = snackbar.className.replace("show", "")
+  }, 3000)
+}
+
+// SEARCH INPUT EVENT LISTENER
 searchInput.addEventListener("input", () => {
   renderContactList(searchInput.value.toLowerCase())
   let newUrl =
     window.location.origin + "?q=" + encodeURIComponent(searchInput.value)
   window.history.replaceState({}, "", newUrl)
+
+  if (searchInput.value === "")
+    window.history.replaceState({}, "", window.location.origin)
 })
 
+// HANDLE CREATE NEW CONTACT CLICK
 const handleCreateNewContact = () => {
   contactFormContainer.style.display = "block"
   contactFormContainer.style.opacity = 1
 }
 
+// HANDLE CANCEL BUTTON CLICK
 const handleCancelButtonClick = () => {
   contactFormContainer.style.display = "none"
   contactForm.reset()
 }
 
+// SAVE CONTACT TO LOCAL STORAGE
 const saveContactsToLocalStorage = (contactList) => {
   localStorage.setItem("my-contact", JSON.stringify(contactList))
 }
 
+// HANDLE SAVE CONTACT
 const handleSaveContact = () => {
   let fullName = document.getElementById("fullName").value
   let email = document.getElementById("email").value
@@ -43,22 +63,34 @@ const handleSaveContact = () => {
   let additionalNotes = document.getElementById("additionalNotes").value
   let contactList = JSON.parse(localStorage.getItem("my-contact")) || []
 
-  contactList.push({
-    id: Math.floor(Math.random() * (500 - 1 + 1)) + 1,
-    fullName,
-    email,
-    phoneNumber,
-    address,
-    birthday,
-    additionalNotes,
-  })
+  if (
+    fullName === "" ||
+    email === "" ||
+    phoneNumber === "" ||
+    address === "" ||
+    birthday === ""
+  )
+    showSnackbar("Please fill out all mandatory fields!", "#d32f2f")
+  else {
+    contactList.push({
+      id: Math.floor(Math.random() * (500 - 1 + 1)) + 1,
+      fullName,
+      email,
+      phoneNumber,
+      address,
+      birthday,
+      additionalNotes,
+    })
 
-  saveContactsToLocalStorage(contactList)
-  contactFormContainer.style.display = "none"
-  contactForm.reset()
-  renderContactList()
+    saveContactsToLocalStorage(contactList)
+    contactFormContainer.style.display = "none"
+    contactForm.reset()
+    renderContactList()
+    showSnackbar("Successfully created a new contact.", "#36993b")
+  }
 }
 
+// HANDLE UPDATE CONTACT
 const handleUpdateContact = () => {
   let fullName = document.getElementById("fullName").value
   let email = document.getElementById("email").value
@@ -80,15 +112,27 @@ const handleUpdateContact = () => {
     return item
   })
 
-  saveContactsToLocalStorage(updatedContactList)
-  renderContactList()
-  contactForm.reset()
-  contactFormContainer.style.display = "none"
-  editButton.style.display = "none"
-  saveButton.style.display = "block"
-  tempContactId = null
+  if (
+    fullName === "" ||
+    email === "" ||
+    phoneNumber === "" ||
+    address === "" ||
+    birthday === ""
+  )
+    showSnackbar("Please fill out all mandatory fields!", "#d32f2f")
+  else {
+    saveContactsToLocalStorage(updatedContactList)
+    renderContactList()
+    contactForm.reset()
+    contactFormContainer.style.display = "none"
+    editButton.style.display = "none"
+    saveButton.style.display = "block"
+    tempContactId = null
+    showSnackbar("Successfully updated the contact.", "#36993b")
+  }
 }
 
+// HANDLE EDIT CONTACT CLICK
 const handleEditContact = (contactId) => {
   contactFormContainer.style.display = "block"
   contactFormContainer.style.opacity = 1
@@ -110,31 +154,36 @@ const handleEditContact = (contactId) => {
   saveButton.style.display = "none"
 }
 
+// HANDLE DELETE CONTACT CLICK
 const handleDeleteContact = (contactId) => {
   let contactList = JSON.parse(localStorage.getItem("my-contact")) || []
 
-  const newContactList = [...contactList].filter(
-    (item) => item.id !== +contactId
-  )
+  const newContactList = contactList.filter((item) => item.id !== +contactId)
 
   saveContactsToLocalStorage(newContactList)
   renderContactList()
+  showSnackbar("Successfully deleted the contact.", "#36993b")
 }
 
+// RENDER CONTACT LIST
 const renderContactList = (searchKeyword = "") => {
   let rawContactList = JSON.parse(localStorage.getItem("my-contact")) || []
 
   const contactList = rawContactList.map((item, index) => {
     return {
       ...item,
-      isShown: item.fullName.toLowerCase().includes(searchKeyword),
+      isShown: item.fullName
+        .toLowerCase()
+        .includes(searchKeyword.toLowerCase()),
     }
   })
 
   contactListContainer.innerHTML = ""
 
   if (rawContactList.length === 0) {
-    contactListContainer.innerHTML = ""
+    contactListContainer.innerHTML = `<div class='flex justify-center items-center w-full h-full'>
+        <img src='./assets/contact.gif' width='80%' height='80%' />
+      </div>`
   }
 
   contactList.forEach((item, index) => {
@@ -149,14 +198,18 @@ const renderContactList = (searchKeyword = "") => {
             <div>
               <button 
                 class="bg-blue-500 py-1 px-3 rounded hover:bg-blue-600 mr-2"
-                onClick="event.stopPropagation(); handleEditContact('${item.id}')"
+                onClick="event.stopPropagation(); handleEditContact('${
+                  item.id
+                }')"
               > 
                 Edit 
               </button>
 
               <button 
                 class="bg-red-500 py-1 px-3 rounded hover:bg-red-600"
-                onClick="event.stopPropagation(); handleDeleteContact('${item.id}')"
+                onClick="event.stopPropagation(); handleDeleteContact('${
+                  item.id
+                }')"
               > 
                 Delete 
               </button>
@@ -205,7 +258,9 @@ const renderContactList = (searchKeyword = "") => {
                 </div>
                 <div class="flex flex-col sm:flex-row border-b pb-2 mb-2 border-slate-500">
                   <p class="sm:text-lg min-w-[170px]">📧 Notes:&nbsp;</p>
-                  <p class="sm:text-lg">${item.additionalNotes}</p>
+                  <p class="sm:text-lg">${
+                    item.additionalNotes !== "" ? item.additionalNotes : "-"
+                  }</p>
                 </div>
               </div>
             </div>
@@ -218,12 +273,13 @@ const renderContactList = (searchKeyword = "") => {
   })
 }
 
+// RENDER DETAIL CARD
 const renderDetailCard = (id) => {
   const contactDetail = document.getElementById(id)
 
   let style = window.getComputedStyle(contactDetail)
   if (style.height === "0px") {
-    contactDetail.style.height = "86%"
+    contactDetail.style.height = "500px"
     contactDetail.style.marginBottom = "12px"
   } else {
     contactDetail.style.height = "0px"
